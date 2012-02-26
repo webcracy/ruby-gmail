@@ -15,9 +15,16 @@ begin
     gem.add_dependency('shared-mime-info', '>= 0')
     gem.add_dependency('mail', '>= 2.2.1')
     gem.add_dependency('mime', '>= 0.1')
+    gem.add_dependency('oauth')
+    gem.add_dependency('gmail_xoauth')
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
+end
+
+
+task :test do
+  system 'bundle exec ruby -Ilib -Itest test/test_gmail.rb'
 end

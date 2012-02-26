@@ -57,7 +57,18 @@ A Rubyesque interface to Gmail, with all the tools you'll need. Search, read and
     Gmail.new(username, password) do |gmail|
       # ...do things...
     end
-
+    
+    # To authenticate with XOAuth, use
+      gmail = Gmail.new(username, nil, {
+       :consumer_key => 'anonymous',    # or replace by your app's consumer key
+       :consumer_secret => 'anonymous', # or replace by your app's consumer key
+       :token => '<user token>',        # MUST replace with user's access token
+       :token_secret => '<user secret>' # MUST replace with user's secret
+     })
+     
+     # For more information on gmail_xoauth, see https://github.com/nfo/gmail_xoauth
+     
+   
 ### 3) Count and gather emails!
     
     # Get counts for messages in the inbox

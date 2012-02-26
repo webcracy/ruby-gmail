@@ -1,0 +1,30 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    gmail_xoauth (0.3.0)
+      oauth (>= 0.3.6)
+    i18n (0.6.0)
+    mail (2.4.1)
+      i18n (>= 0.4.0)
+      mime-types (~> 1.16)
+      treetop (~> 1.4.8)
+    metaclass (0.0.1)
+    mime-types (1.17.2)
+    mocha (0.10.4)
+      metaclass (~> 0.0.1)
+    oauth (0.4.5)
+    polyglot (0.3.3)
+    shared-mime-info (0.1)
+    treetop (1.4.10)
+      polyglot
+      polyglot (>= 0.3.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  gmail_xoauth
+  mail (>= 2.2.1)
+  mocha
+  oauth
+  shared-mime-info

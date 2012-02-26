@@ -1,4 +1,4 @@
-require 'net/imap'
+require 'gmail_xoauth'
 
 class Gmail
   VERSION = '0.0.9'
@@ -6,18 +6,29 @@ class Gmail
   class NoLabel < RuntimeError; end
 
   ##################################
-  #  Gmail.new(username, password)
+  #  Gmail.new(username, password, oauth_options={})
   ##################################
-  def initialize(username, password)
+  def initialize(username, password, oauth_options={})
     # This is to hide the username and password, not like it REALLY needs hiding, but ... you know.
     # Could be helpful when demoing the gem in irb, these bits won't show up that way.
     class << self
       class << self
-        attr_accessor :username, :password
+        attr_accessor :username, :password, :oauth_app_id, :oauth_app_secret, :user_access_token, :user_secret_token, :use_xoauth
       end
     end
+    
     meta.username = username =~ /@/ ? username : username + '@gmail.com'
     meta.password = password
+    meta.use_xoauth = false
+    
+    unless oauth_options.empty?
+      meta.use_xoauth = true
+      meta.oauth_app_id = oauth_options[:consumer_key]
+      meta.oauth_app_secret = oauth_options[:consumer_secret]
+      meta.user_access_token = oauth_options[:token]
+      meta.user_secret_token = oauth_options[:token_secret]
+    end
+    
     @imap = Net::IMAP.new('imap.gmail.com',993,true,nil,false)
     if block_given?
       login # This is here intentionally. Normally, we get auto logged-in when first needed.
@@ -92,9 +103,19 @@ class Gmail
   #  LOGIN
   ###########################
   def login
-    res = @imap.login(meta.username, meta.password)
+    if meta.use_xoauth == true
+      res = @imap.authenticate('XOAUTH', meta.username,
+        :consumer_key => meta.oauth_app_id,
+        :consumer_secret => meta.oauth_app_secret,
+        :token => meta.user_access_token,
+        :token_secret => meta.user_secret_token
+      )
+    else
+      res = @imap.login(meta.username, meta.password)
+    end
     @logged_in = true if res && res.name == 'OK'
   end
+  
   def logged_in?
     !!@logged_in
   end
